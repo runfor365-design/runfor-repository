@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { CalendarRange, Map, Newspaper, ShieldCheck } from 'lucide-react'
 
 const description =
-  '전국 마라톤·러닝 대회 정보를 지도와 달력으로 제공하는 런포(RUNFOR)를 소개합니다. 지역별, 종목별 대회 검색과 접수 상태 확인 서비스입니다.'
+  '런포(RUNFOR) RUNNING INFORMATION / 전국 마라톤·러닝 대회 일정을 검색하고 확인하세요.'
 
 export const metadata: Metadata = {
   title: '런포 소개',

@@ -20,6 +20,11 @@ import { getRace, getRaces } from '@/lib/races'
 import { shortRegionName } from '@/lib/region-map'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://runfor.kr'
+const DESCRIPTION_MAX = 80
+
+function truncate(text: string, max = DESCRIPTION_MAX) {
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text
+}
 
 export function generateStaticParams() {
   return getRaces().map((race) => ({ slug: race.slug }))
@@ -34,7 +39,9 @@ export async function generateMetadata({
   const race = getRace(slug)
   if (!race) return { title: '대회를 찾을 수 없습니다' }
   const title = `${race.대회명} | ${formatKoreanDate(race.date)} ${shortRegionName(race.region)} 마라톤 대회`
-  const description = `${formatKoreanDate(race.date)} ${race.장소}에서 열리는 ${race.대회명} 일정, 종목(${race.종목.join(', ')}), 접수 정보를 확인하세요.`
+  const description = truncate(
+    `${race.대회명} · ${formatKoreanDate(race.date, false)} ${shortRegionName(race.region)} 개최. 접수 정보를 확인하세요.`,
+  )
   return {
     title: race.대회명,
     description,
