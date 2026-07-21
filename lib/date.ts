@@ -10,18 +10,23 @@ export function normalizeRaceDate(exact: string | undefined, display: string, so
 
 export function normalizeStatus(status: string): RegistrationStatus {
   if (status.includes('예정')) return '접수예정'
-  if (status.includes('마감')) return '접수마감'
+  if (status.includes('마감') || status.includes('품절') || status.includes('중단'))
+    return '접수마감'
   return '접수중'
 }
 
 export function formatKoreanDate(date: string, withYear = true) {
   return new Intl.DateTimeFormat('ko-KR', {
-    ...(withYear ? { year: 'numeric' } : {}), month: 'long', day: 'numeric', weekday: 'short',
+    ...(withYear ? { year: 'numeric' } : {}),
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
   }).format(new Date(`${date}T00:00:00`))
 }
 
 export function daysUntil(date: string) {
-  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
   const target = new Date(`${date}T00:00:00`)
   return Math.ceil((target.getTime() - today.getTime()) / 86400000)
 }

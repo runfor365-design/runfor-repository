@@ -1,7 +1,41 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e \"console.log\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('data/races.json','utf8'\\)\\).length\\)\")"
+      "Bash(node -e \"console.log\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('data/races.json','utf8'\\)\\).length\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(taskkill //PID 2616 //F)",
+      "Bash(netstat -ano)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(chromium-cli --help)",
+      "Bash(curl -s \"https://news.google.com/rss/search?q=%EB%A7%88%EB%9D%BC%ED%86%A4%20OR%20%EB%9F%AC%EB%8B%9D%20%EB%8C%80%ED%9A%8C%20when:7d&hl=ko&gl=KR&ceid=KR:ko\")",
+      "Bash(curl -s http://localhost:3000/api/news)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('count:',j.items.length\\);j.items.forEach\\(i=>console.log\\('-',i.title.slice\\(0,40\\)\\)\\)}\\)\")",
+      "Bash(curl -s http://localhost:3000/api/youtube)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('count:',j.items.length\\);j.items.forEach\\(i=>console.log\\('-',i.source,'|',i.title.slice\\(0,40\\)\\)\\)}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);j.items.filter\\(i=>i.source==='지니코치'\\).forEach\\(i=>console.log\\(i.title,'|',i.link,'|',i.publishedAt\\)\\)}\\)\")",
+      "Bash(curl -s \"https://www.youtube.com/feeds/videos.xml?channel_id=UCe-kxosyqn2fuJOiFO4utag\")",
+      "Bash(curl -s -o /tmp/naver1.xml -w \"HTTP %{http_code} content-type: %{content_type}\\\\n\" \"https://search.naver.com/search.naver?where=rss&query=%EB%A7%88%EB%9D%BC%ED%86%A4\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/naver2.xml -w \"HTTP %{http_code} content-type: %{content_type}\\\\n\" \"https://rss.naver.com/section/100.xml\")",
+      "Bash(curl -s -o /tmp/naver3.json -w \"HTTP %{http_code} content-type: %{content_type}\\\\n\" \"https://openapi.naver.com/v1/search/news.json?query=%EB%A7%88%EB%9D%BC%ED%86%A4\")",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "Bash(npx prettier *)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{console.log\\(JSON.parse\\(d\\).items.length\\)}\\)\")",
+      "WebSearch",
+      "Bash(npm ls *)",
+      "Bash(npm view *)",
+      "Bash(curl -s http://localhost:3000/api/geo)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(xargs grep -l \"문의하기\")",
+      "Bash(curl -sL \"https://forms.gle/b57wGMKhk1bfwXa36\" -o /tmp/form.html -w \"HTTP %{http_code}, final URL: %{url_effective}\\\\n\")",
+      "Bash(grep -o 'FB_PUBLIC_LOAD_DATA_ = .*;' /tmp/form.html | head -c 6000)",
+      "Bash(curl -sL \"https://docs.google.com/forms/d/e/1FAIpQLSdIldwiJxH3UHJqvg1maWcAVOj7JHNBzY2W6T7hWjw9QuJ2ZQ/viewform?usp=pp_url&entry.2003045630=%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8C%80%ED%9A%8C%EB%AA%85&entry.935685056=2026-08-01\" -o /tmp/form_prefill.html)",
+      "Bash(curl -s -o /tmp/submit_result.html -w 'HTTP %{http_code}\\\\n' -X POST https://docs.google.com/forms/d/e/1FAIpQLSdIldwiJxH3UHJqvg1maWcAVOj7JHNBzY2W6T7hWjw9QuJ2ZQ/formResponse --data-urlencode 'entry.2003045630=curl테스트 대회명' --data-urlencode entry.935685056=2026-08-01 --data-urlencode 'entry.118111799=09:00 집결' --data-urlencode entry.661321294=10km --data-urlencode entry.1348691835=서울 --data-urlencode 'entry.965450556=테스트 장소' --data-urlencode 'entry.1001465432=테스트 주최' --data-urlencode entry.2097275837=2026-07-01 --data-urlencode entry.1719016065=2026-07-30 --data-urlencode entry.331853705=https://example.com --data-urlencode entry.938752857=test@example.com --data-urlencode entry.1364621885=010-0000-0000 --data-urlencode 'entry.373981143=curl로 자동 제출 테스트')"
     ]
   }
 }

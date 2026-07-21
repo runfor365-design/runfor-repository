@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+build
+dist
+public
+data/*.json
+package-lock.json
+next-env.d.ts
+README.md
+CLAUDE.md
