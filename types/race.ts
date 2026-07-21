@@ -45,6 +45,7 @@ export interface NormalizedRace {
   장소상세: string
   집결시간: string
   집결정보: string
+  주최?: string
   접수상태: RegistrationStatus | string
   접수기간: string
   상세링크: string

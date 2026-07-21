@@ -4,15 +4,9 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { MapPin, RefreshCw } from 'lucide-react'
 import { formatKoreanDate } from '@/lib/date'
-import { getRecommendedRaces, type RecommendedRace, type RecommendReason } from '@/lib/recommend'
+import { getRecommendedRaces, type RecommendedRace } from '@/lib/recommend'
 import { shortRegionName } from '@/lib/region-map'
 import type { NormalizedRace } from '@/types/race'
-
-const REASON_LABEL: Record<RecommendReason, string> = {
-  featured: '추천',
-  nearby: '내 주변',
-  soon: '대회 임박',
-}
 
 export default function RecommendedRaces({ races }: { races: NormalizedRace[] }) {
   const [ready, setReady] = useState(false)
@@ -60,9 +54,9 @@ export default function RecommendedRaces({ races }: { races: NormalizedRace[] })
         </div>
       ) : (
         <div className="recommend-row">
-          {recommended.map(({ race, reason }) => (
+          {recommended.map(({ race }) => (
             <Link key={race.slug} href={`/race/${race.slug}`} className="recommend-card">
-              <span className="recommend-tag">{REASON_LABEL[reason]}</span>
+              <span className="recommend-tag">추천</span>
               <strong>{race.대회명}</strong>
               <span className="recommend-meta">
                 <MapPin size={12} />

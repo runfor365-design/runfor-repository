@@ -2,9 +2,15 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarRange, Map, Newspaper, ShieldCheck } from 'lucide-react'
 
+const description =
+  '전국 마라톤·러닝 대회 정보를 지도와 달력으로 제공하는 런포(RUNFOR)를 소개합니다. 지역별, 종목별 대회 검색과 접수 상태 확인 서비스입니다.'
+
 export const metadata: Metadata = {
   title: '런포 소개',
-  description: '달릴 이유와 다음 출발선을 연결하는 마라톤 정보 서비스 런포를 소개합니다.',
+  description,
+  alternates: { canonical: '/about' },
+  openGraph: { title: '런포 소개', description, url: '/about' },
+  twitter: { card: 'summary_large_image', title: '런포 소개', description },
 }
 
 export default function AboutPage() {

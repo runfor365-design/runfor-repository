@@ -4,5 +4,15 @@
   { "slug": "2026-busan-sea-run", "코스설명": "광안리 해변과 수영강변을 잇는 해안 코스입니다.", "난이도": "보통", "팁": "새벽 출발이지만 햇빛이 강하므로 선크림과 모자를 준비하세요.", "추천여부": true },
   { "slug": "2026-pyeongchang-highland-marathon", "코스설명": "고원 지형의 긴 완만한 오르막과 내리막이 반복됩니다.", "난이도": "어려움", "팁": "평지 기록보다 페이스를 5~10% 보수적으로 잡는 편이 좋습니다.", "추천여부": true },
   { "slug": "2026-gyeongju-heritage-marathon", "코스설명": "도심과 보문관광단지를 연결하며 후반부에 완만한 굴곡이 있습니다.", "난이도": "보통", "팁": "관광객 이동이 많은 주말이므로 숙소와 교통을 일찍 예약하세요.", "추천여부": true },
-  { "slug": "2026-jeju-oreum-trail", "코스설명": "흙길, 목초지, 화산송이 구간이 섞인 기술적인 트레일입니다.", "난이도": "어려움", "팁": "접지력이 좋은 트레일화와 방풍 재킷을 준비하세요.", "추천여부": true }
+  { "slug": "2026-jeju-oreum-trail", "코스설명": "흙길, 목초지, 화산송이 구간이 섞인 기술적인 트레일입니다.", "난이도": "어려움", "팁": "접지력이 좋은 트레일화와 방풍 재킷을 준비하세요.", "추천여부": true },
+  { "slug": "just-run10-10k-national-race-2026", "추천여부": true },
+  { "slug": "2026-just-run10-cheongju-pb-easy-official", "추천여부": true },
+  { "slug": "2026-just-run10-seongnam-10k", "추천여부": true },
+  { "slug": "2026-just-run10-namyangju-pb-easy-official", "추천여부": true },
+  { "slug": "2026-just-run10-yangsan-10k-running", "추천여부": true },
+  { "slug": "2026-just-run10-daegu-10k", "추천여부": true },
+  { "slug": "2026-just-run10-daejeon-official-race", "추천여부": true },
+  { "slug": "just-run10-sejong-2026-fall", "추천여부": true },
+  { "slug": "2026-just-run10-gimhae-daedong", "추천여부": true },
+  { "slug": "2026-just-run10-cheongju-pb-easy-official-second", "추천여부": true }
 ]

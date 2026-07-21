@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import {
   ArrowLeft,
   ArrowUpRight,
+  Building2,
   CalendarDays,
   Check,
   Clock3,
@@ -18,6 +19,8 @@ import { formatKoreanDate } from '@/lib/date'
 import { getRace, getRaces } from '@/lib/races'
 import { shortRegionName } from '@/lib/region-map'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://runfor.kr'
+
 export function generateStaticParams() {
   return getRaces().map((race) => ({ slug: race.slug }))
 }
@@ -30,13 +33,24 @@ export async function generateMetadata({
   const { slug } = await params
   const race = getRace(slug)
   if (!race) return { title: '대회를 찾을 수 없습니다' }
+  const title = `${race.대회명} | ${formatKoreanDate(race.date)} ${shortRegionName(race.region)} 마라톤 대회`
+  const description = `${formatKoreanDate(race.date)} ${race.장소}에서 열리는 ${race.대회명} 일정, 종목(${race.종목.join(', ')}), 접수 정보를 확인하세요.`
   return {
     title: race.대회명,
-    description: `${formatKoreanDate(race.date)} ${race.장소}에서 열리는 ${race.대회명} 일정, 종목, 접수 정보를 확인하세요.`,
+    description,
+    alternates: { canonical: `/race/${slug}` },
     openGraph: {
-      title: race.대회명,
-      description: `${race.장소} · ${race.종목.join(', ')}`,
+      title,
+      description,
       type: 'article',
+      url: `/race/${slug}`,
+      images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: race.대회명 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/opengraph-image'],
     },
   }
 }
@@ -47,8 +61,29 @@ export default async function RaceDetailPage({ params }: { params: Promise<{ slu
   if (!race) notFound()
   const officialLink = race.신청링크 || race.상세링크
   const isSample = officialLink.includes('example.com')
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: race.대회명,
+    startDate: race.date,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    sport: '마라톤',
+    location: {
+      '@type': 'Place',
+      name: race.장소상세 || race.장소,
+      address: { '@type': 'PostalAddress', addressRegion: race.region, addressCountry: 'KR' },
+    },
+    ...(race.주최 ? { organizer: { '@type': 'Organization', name: race.주최 } } : {}),
+    description: race.소개내용 || `${race.대회명} 대회 일정과 참가 정보`,
+    url: `${SITE_URL}/race/${race.slug}`,
+  }
   return (
     <main className="race-detail-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="detail-top">
         <Link href="/#races">
           <ArrowLeft size={16} /> 대회 목록
@@ -109,6 +144,15 @@ export default async function RaceDetailPage({ params }: { params: Promise<{ slu
                 </dt>
                 <dd>{race.종목.join(' · ')}</dd>
               </div>
+              {race.주최 && (
+                <div>
+                  <dt>
+                    <Building2 />
+                    주최
+                  </dt>
+                  <dd>{race.주최}</dd>
+                </div>
+              )}
             </dl>
           </article>
           <article className="editorial-block">

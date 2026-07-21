@@ -9,6 +9,8 @@ export interface RecommendedRace {
 }
 
 const COUNT = 4
+const FEATURED_COUNT = 1
+const NEARBY_COUNT = 1
 /** '대회 임박' 후보를 진짜 가까운 대회로만 좁힌 뒤 그 안에서 무작위로 뽑기 위한 창 크기 */
 const SOON_WINDOW = 15
 
@@ -18,9 +20,10 @@ function shuffle<T>(list: T[]) {
 
 /**
  * 추천 대회 4건을 우선순위대로 채운다.
- * 1) 추천여부(race-extra.json)가 true인 대회 → 2) 방문자 지역 대회 → 3) 접수중이면서 대회일이 가까운 대회
+ * 1) 추천여부(race-extra.json)가 true인 대회 1건 → 2) 방문자 지역 대회 1건 → 3) 접수중이면서 대회일이 가까운 대회로 나머지 채움
  * 앞 순위가 모자라면 다음 순위로 자동 대체되어 항상 최대 COUNT건까지 채워진다.
  * 각 단계 후보군 안에서는 무작위로 골라, 새로고침/재방문마다 다른 조합이 보인다.
+ * 선정이 끝난 뒤 최종 4건의 노출 순서도 섞어서 추천/주변/임박이 항상 같은 자리에 고정되지 않게 한다.
  */
 export function getRecommendedRaces(
   races: NormalizedRace[],
@@ -30,7 +33,7 @@ export function getRecommendedRaces(
 
   const featured = shuffle(races.filter((race) => race.extra?.추천여부 && daysUntil(race.date) >= 0))
   for (const race of featured) {
-    if (picked.size >= COUNT) break
+    if (picked.size >= FEATURED_COUNT) break
     picked.set(race.slug, { race, reason: 'featured' })
   }
 
@@ -40,8 +43,9 @@ export function getRecommendedRaces(
         (race) => race.region === region && race.status !== '접수마감' && daysUntil(race.date) >= 0,
       ),
     )
+    const nearbyTarget = picked.size + NEARBY_COUNT
     for (const race of nearby) {
-      if (picked.size >= COUNT) break
+      if (picked.size >= nearbyTarget) break
       if (!picked.has(race.slug)) picked.set(race.slug, { race, reason: 'nearby' })
     }
   }
@@ -56,5 +60,5 @@ export function getRecommendedRaces(
     if (!picked.has(race.slug)) picked.set(race.slug, { race, reason: 'soon' })
   }
 
-  return [...picked.values()]
+  return shuffle([...picked.values()])
 }

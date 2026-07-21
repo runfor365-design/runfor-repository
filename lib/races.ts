@@ -17,6 +17,7 @@ export function getRaces(): NormalizedRace[] {
       장소상세: race.장소,
       집결시간: race.집결,
       집결정보: race.집결,
+      주최: race.주최 || undefined,
       접수상태: race.접수상태,
       접수기간: `${race.접수시작} ~ ${race.접수마감}`,
       상세링크: race.상세링크,
