@@ -4,7 +4,7 @@ import Footer from '@/components/Footer'
 import './globals.css'
 
 const SITE_DESCRIPTION =
-  '전국 마라톤·러닝 대회 일정을 지역, 종목, 접수 상태로 검색하고 지도·달력으로 확인하세요. 5km부터 풀코스까지 무료로 제공합니다.'
+  '전국 마라톤·러닝 대회 일정을 검색하고 확인하세요.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://runfor.kr'),
