@@ -63,7 +63,7 @@ export default function DashboardClient({ races }: { races: NormalizedRace[] }) 
         <div className="section-intro">
           <div>
             <span className="eyebrow">FIND YOUR START LINE</span>
-            <h1 id="page-title">대회 일정 모아보기</h1>
+            <h1 id="page-title">{new Date().getFullYear()} 전국 마라톤 대회 일정</h1>
           </div>
           <p>전국 마라톤·러닝 대회 일정을 지역, 종목, 접수 상태로 검색하고 지도와 달력으로 확인하세요.</p>
         </div>

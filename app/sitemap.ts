@@ -1,11 +1,28 @@
 import type { MetadataRoute } from 'next'
+import { getRaces } from '@/lib/races'
 
 /**
- * 네이버/구글에 메인 도메인 색인이 정상적으로 잡히는지 먼저 확인하기 위해
- * 대회 상세 993건은 잠시 빼고 메인 페이지 하나만 제출한다.
- * 색인 상태가 확인되면 대회 상세 페이지를 다시 포함시킨다.
+ * 원본 데이터(data/races.json)에는 수정 시각(updatedAt) 필드가 없어 lastModified는
+ * 임의로 채우지 않는다. 실제 수정 이력 필드가 생기면 그때 race별로 넣는다.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://runfor.kr'
-  return [{ url: base, changeFrequency: 'daily', priority: 1 }]
+  const seenSlugs = new Set<string>()
+  const raceEntries = getRaces()
+    .filter((race) => {
+      if (!race.slug || seenSlugs.has(race.slug)) return false
+      seenSlugs.add(race.slug)
+      return true
+    })
+    .map((race) => ({
+      url: `${base}/race/${race.slug}`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
+
+  return [
+    { url: base, changeFrequency: 'daily', priority: 1 },
+    { url: `${base}/about`, changeFrequency: 'monthly', priority: 0.5 },
+    ...raceEntries,
+  ]
 }
