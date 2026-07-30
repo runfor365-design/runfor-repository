@@ -30,7 +30,7 @@ export default function AboutPage() {
           <article>
             <CalendarRange />
             <strong>달력으로 찾기</strong>
-            <p>대회 달력으로 접수중 · 접수예정 · 마감 상태를 구분해 한눈에 확인합니다.</p>
+            <p>대회 달력으로 대회예정 · 대회종료 상태를 구분해 한눈에 확인합니다.</p>
           </article>
           <article>
             <Map />

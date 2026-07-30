@@ -1,14 +1,11 @@
 import type { MetadataRoute } from 'next'
 import { getRaces } from '@/lib/races'
 
-/**
- * 원본 데이터(data/races.json)에는 수정 시각(updatedAt) 필드가 없어 lastModified는
- * 임의로 채우지 않는다. 실제 수정 이력 필드가 생기면 그때 race별로 넣는다.
- */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://runfor.kr'
+  const races = await getRaces()
   const seenSlugs = new Set<string>()
-  const raceEntries = getRaces()
+  const raceEntries = races
     .filter((race) => {
       if (!race.slug || seenSlugs.has(race.slug)) return false
       seenSlugs.add(race.slug)
@@ -16,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
     .map((race) => ({
       url: `${base}/race/${race.slug}`,
+      lastModified: race.updatedAt ? new Date(race.updatedAt) : undefined,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))

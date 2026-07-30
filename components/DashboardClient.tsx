@@ -10,50 +10,58 @@ import RaceList from './RaceList'
 import RecommendedRaces from './RecommendedRaces'
 import NewsSection from './NewsSection'
 import VideoSection from './VideoSection'
-import { daysUntil, formatKoreanDate } from '@/lib/date'
+import { formatKoreanDate } from '@/lib/date'
 import { regions } from '@/lib/region-map'
 import type { NormalizedRace } from '@/types/race'
 
 export default function DashboardClient({ races }: { races: NormalizedRace[] }) {
   const [search, setSearch] = useState('')
   const [region, setRegion] = useState('')
-  const [status, setStatus] = useState('접수중')
   const [month, setMonth] = useState('')
   const [view, setView] = useState<'map' | 'calendar'>('calendar')
   const [selectedRace, setSelectedRace] = useState<NormalizedRace | null>(null)
 
-  const filtered = useMemo(
+  const keyword = search.trim().toLowerCase()
+
+  // 달력: 검색·지역·월 조건만 적용, 대회예정/대회종료 전부 표시(색상으로 구분)
+  const calendarRaces = useMemo(
     () =>
-      races.filter((race) => {
-        const keyword = search.trim().toLowerCase()
-        return (
+      races.filter(
+        (race) =>
           (!keyword || `${race.대회명} ${race.장소}`.toLowerCase().includes(keyword)) &&
-          (!region || race.region === region) &&
-          (!status || race.status === status) &&
-          (!month || race.date.startsWith(month))
-        )
-      }),
-    [races, search, region, status, month],
+          (!month || race.date.startsWith(month)) &&
+          (!region || race.region === region),
+      ),
+    [races, keyword, region, month],
   )
+  // 지도: 검색·월 조건만 적용(지역은 지도 자체에서 선택), 대회예정만 표시
   const mapRaces = useMemo(
     () =>
-      races.filter((race) => {
-        const keyword = search.trim().toLowerCase()
-        return (
+      races.filter(
+        (race) =>
           (!keyword || `${race.대회명} ${race.장소}`.toLowerCase().includes(keyword)) &&
-          (!status || race.status === status) &&
-          (!month || race.date.startsWith(month))
-        )
-      }),
-    [races, search, status, month],
+          (!month || race.date.startsWith(month)) &&
+          race.status === '대회예정',
+      ),
+    [races, keyword, month],
+  )
+  // 목록: 검색·지역·월 조건 적용, 대회예정만 표시
+  const listRaces = useMemo(
+    () =>
+      races.filter(
+        (race) =>
+          (!keyword || `${race.대회명} ${race.장소}`.toLowerCase().includes(keyword)) &&
+          (!month || race.date.startsWith(month)) &&
+          (!region || race.region === region) &&
+          race.status === '대회예정',
+      ),
+    [races, keyword, region, month],
   )
   const availableMonths = [...new Set(races.map((race) => race.date.slice(0, 7)))]
   const availableRegions = regions.filter((item) => races.some((race) => race.region === item))
-  const upcoming = useMemo(() => filtered.filter((race) => daysUntil(race.date) >= 0), [filtered])
   const reset = () => {
     setSearch('')
     setRegion('')
-    setStatus('접수중')
     setMonth('')
   }
 
@@ -65,20 +73,18 @@ export default function DashboardClient({ races }: { races: NormalizedRace[] }) 
             <span className="eyebrow">FIND YOUR START LINE</span>
             <h1 id="page-title">{new Date().getFullYear()} 전국 마라톤 대회 일정</h1>
           </div>
-          <p>전국 마라톤·러닝 대회 일정을 지역, 종목, 접수 상태로 검색하고 지도와 달력으로 확인하세요.</p>
+          <p>전국 마라톤·러닝 대회 일정을 지역, 종목, 대회 상태로 검색하고 지도와 달력으로 확인하세요.</p>
         </div>
         <FilterBar
           search={search}
           onSearch={setSearch}
           region={region}
           onRegion={setRegion}
-          status={status}
-          onStatus={setStatus}
           month={month}
           onMonth={setMonth}
           months={availableMonths}
           availableRegions={availableRegions}
-          resultCount={upcoming.length}
+          resultCount={listRaces.length}
           onReset={reset}
         />
         <div className="explorer-grid">
@@ -110,12 +116,12 @@ export default function DashboardClient({ races }: { races: NormalizedRace[] }) 
               </button>
             </div>
             {view === 'calendar' ? (
-              <RaceCalendar races={filtered} onSelect={setSelectedRace} />
+              <RaceCalendar races={calendarRaces} onSelect={setSelectedRace} />
             ) : (
               <KoreaMap races={mapRaces} selectedRegion={region} onSelect={setRegion} />
             )}
           </div>
-          <RaceList races={upcoming} region={region} />
+          <RaceList races={listRaces} region={region} />
           <RecommendedRaces races={races} />
         </div>
       </section>

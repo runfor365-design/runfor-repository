@@ -7,7 +7,7 @@ import { daysUntil, formatKoreanDate } from '@/lib/date'
 import { shortRegionName } from '@/lib/region-map'
 import type { NormalizedRace } from '@/types/race'
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 6
 
 export default function RaceList({ races, region }: { races: NormalizedRace[]; region: string }) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)

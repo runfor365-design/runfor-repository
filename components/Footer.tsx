@@ -6,9 +6,6 @@ import { Check, Copy, Loader2, Mail, Send, X } from 'lucide-react'
 
 const CONTACT_EMAIL = 'runfor365@gmail.com'
 
-const RACE_FORM_ID = '1FAIpQLSdIldwiJxH3UHJqvg1maWcAVOj7JHNBzY2W6T7hWjw9QuJ2ZQ'
-const RACE_FORM_SUBMIT_URL = `https://docs.google.com/forms/d/e/${RACE_FORM_ID}/formResponse`
-
 const GATHER_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const minutes = i * 30
   const h = String(Math.floor(minutes / 60)).padStart(2, '0')
@@ -40,7 +37,6 @@ const REGION_OPTIONS = [
 interface RaceField {
   key: string
   label: string
-  entry: string
   type?: string
   placeholder?: string
   textarea?: boolean
@@ -49,19 +45,19 @@ interface RaceField {
 }
 
 const RACE_FIELDS: RaceField[] = [
-  { key: '대회명', label: '대회명', entry: '2003045630', placeholder: '새해 일출 마라톤' },
-  { key: '날짜', label: '날짜', entry: '935685056', type: 'date' },
-  { key: '집결', label: '집결시간', entry: '118111799', options: GATHER_OPTIONS },
-  { key: '종목', label: '종목', entry: '661321294', options: DISTANCE_OPTIONS, multi: true },
-  { key: '지역', label: '지역', entry: '1348691835', options: REGION_OPTIONS },
-  { key: '장소', label: '장소', entry: '965450556', placeholder: '육상트랙구장' },
-  { key: '주최', label: '주최', entry: '1001465432', placeholder: '(사)대한생활체육협회' },
-  { key: '접수시작', label: '접수시작', entry: '2097275837', type: 'date' },
-  { key: '접수마감', label: '접수마감', entry: '1719016065', type: 'date' },
-  { key: '홈페이지', label: '홈페이지', entry: '331853705', placeholder: 'https://...' },
-  { key: '이메일', label: '주최 측 문의 이메일', entry: '938752857', type: 'email' },
-  { key: '전화', label: '전화', entry: '1364621885', placeholder: '1234-5678' },
-  { key: '소개내용', label: '소개내용', entry: '373981143', textarea: true },
+  { key: '대회명', label: '대회명', placeholder: '새해 일출 마라톤' },
+  { key: '날짜', label: '날짜', type: 'date' },
+  { key: '집결', label: '집결시간', options: GATHER_OPTIONS },
+  { key: '종목', label: '종목', options: DISTANCE_OPTIONS, multi: true },
+  { key: '지역', label: '지역', options: REGION_OPTIONS },
+  { key: '장소', label: '장소', placeholder: '육상트랙구장' },
+  { key: '주최', label: '주최', placeholder: '(사)대한생활체육협회' },
+  { key: '접수시작', label: '접수시작', type: 'date' },
+  { key: '접수마감', label: '접수마감', type: 'date' },
+  { key: '홈페이지', label: '홈페이지', placeholder: 'https://...' },
+  { key: '이메일', label: '주최 측 문의 이메일', type: 'email' },
+  { key: '전화', label: '전화', placeholder: '1234-5678' },
+  { key: '소개내용', label: '소개내용', textarea: true },
 ]
 
 type SubmitState = 'idle' | 'submitting' | 'done' | 'error'
@@ -116,10 +112,19 @@ export default function Footer() {
 
   const submitRaceForm = () => {
     setSubmitState('submitting')
-    const params = new URLSearchParams()
-    RACE_FIELDS.forEach((field) => params.set(`entry.${field.entry}`, values[field.key].trim()))
-    fetch(RACE_FORM_SUBMIT_URL, { method: 'POST', mode: 'no-cors', body: params })
-      .then(() => setSubmitState('done'))
+    const payload: Record<string, string> = {}
+    RACE_FIELDS.forEach((field) => {
+      payload[field.key] = values[field.key].trim()
+    })
+    fetch('/api/apply-race', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('submit failed')
+        setSubmitState('done')
+      })
       .catch(() => setSubmitState('error'))
   }
 
@@ -184,11 +189,14 @@ export default function Footer() {
             {category === 'race' &&
               (submitState === 'done' ? (
                 <div className="contact-panel">
-                  <p>문의가 접수되었습니다. 확인 후 순서대로 연락드리겠습니다.</p>
+                  <p>신청이 접수되었습니다. 관리자 검토 후 승인되면 사이트에 노출됩니다.</p>
                 </div>
               ) : (
                 <div className="contact-panel">
-                  <p>대회 등록을 원하시면 아래 내용을 모두 입력해 주세요.</p>
+                  <p>
+                    대회 등록을 원하시면 아래 내용을 모두 입력해 주세요. 제출 후 관리자 검토를 거쳐
+                    승인되면 사이트에 노출됩니다.
+                  </p>
                   <div className="contact-form">
                     {RACE_FIELDS.map((field) => {
                       if (field.multi && field.options) {
@@ -286,7 +294,7 @@ export default function Footer() {
                     ) : (
                       <Send size={16} />
                     )}
-                    {submitState === 'submitting' ? '전송 중...' : '문의하기'}
+                    {submitState === 'submitting' ? '전송 중...' : '등록 신청하기'}
                   </button>
                 </div>
               ))}

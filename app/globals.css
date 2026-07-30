@@ -204,7 +204,7 @@ select {
 }
 .select-filters {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 .select-filters label {
@@ -515,9 +515,6 @@ select {
 .status-legend .open {
   background: var(--orange);
 }
-.status-legend .soon {
-  background: var(--mint);
-}
 .status-legend .closed {
   background: #aab4b9;
 }
@@ -525,6 +522,9 @@ select {
   --fc-border-color: #e3e8ea;
   --fc-today-bg-color: var(--orange-soft);
   font-size: 12px;
+}
+.fc .fc-day-today {
+  box-shadow: inset 0 0 0 1px var(--orange);
 }
 .fc .fc-toolbar-title {
   font-size: 17px !important;
@@ -564,17 +564,16 @@ select {
   font-size: 9px;
   cursor: pointer;
 }
-.fc .event-접수중 {
+.fc .event-대회예정 {
   background: var(--orange);
   color: white;
 }
-.fc .event-접수예정 {
-  background: var(--mint);
-  color: #173c33;
-}
-.fc .event-접수마감 {
+.fc .event-대회종료 {
   background: #e4e8e9;
   color: #69777e;
+}
+.fc-h-event .fc-event-main {
+  color: #000;
 }
 .fc .fc-daygrid-more-link {
   color: var(--orange);
@@ -584,7 +583,7 @@ select {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 520px;
+  max-height: 626px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -695,15 +694,11 @@ select {
   font-weight: 800;
   white-space: nowrap;
 }
-.status-접수중 {
+.status-대회예정 {
   color: var(--orange);
   background: var(--orange-soft);
 }
-.status-접수예정 {
-  color: #236c59;
-  background: #e1f1ec;
-}
-.status-접수마감 {
+.status-대회종료 {
   color: #68757b;
   background: #e9edee;
 }
@@ -1600,9 +1595,6 @@ select {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  .select-filters {
-    grid-template-columns: repeat(3, 1fr);
-  }
   .filter-result {
     text-align: right;
   }
@@ -1794,4 +1786,161 @@ select {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.admin-login-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.admin-login-form {
+  width: 100%;
+  max-width: 340px;
+  display: grid;
+  gap: 14px;
+  padding: 32px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.admin-login-form h1 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+.admin-login-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-login-form input {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+.admin-login-form button {
+  margin-top: 6px;
+  padding: 11px;
+  border: 0;
+  background: var(--ink);
+  color: white;
+  font-weight: 700;
+}
+.admin-login-error {
+  margin: 0;
+  color: var(--orange);
+  font-size: 12px;
+}
+
+.admin-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  display: grid;
+  gap: 28px;
+}
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.admin-header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.admin-header-user button {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  background: white;
+}
+.admin-section {
+  padding: 20px 24px;
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+.admin-section h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+.admin-section p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.admin-upload-message {
+  margin-top: 10px;
+  font-size: 13px;
+}
+.admin-search {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.admin-table th,
+.admin-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+.admin-table th {
+  color: var(--muted);
+  font-size: 11px;
+}
+.admin-pending {
+  border-color: var(--orange);
+}
+.admin-pending-list {
+  display: grid;
+  gap: 10px;
+}
+.admin-pending-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--orange-soft);
+  border: 1px solid var(--orange);
+}
+.admin-pending-card > div:first-child {
+  display: grid;
+  gap: 2px;
+  font-size: 12px;
+}
+.admin-pending-card strong {
+  font-size: 14px;
+}
+.admin-pending-card span {
+  color: var(--muted);
+}
+.admin-pending-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.admin-pending-actions button {
+  padding: 8px 14px;
+  border: 0;
+  background: var(--ink);
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+}
+.admin-pending-actions button.admin-reject {
+  background: white;
+  color: var(--ink);
+  border: 1px solid var(--line);
 }

@@ -26,8 +26,11 @@ function truncate(text: string, max = DESCRIPTION_MAX) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text
 }
 
-export function generateStaticParams() {
-  return getRaces().map((race) => ({ slug: race.slug }))
+export const revalidate = 43200
+
+export async function generateStaticParams() {
+  const races = await getRaces()
+  return races.map((race) => ({ slug: race.slug }))
 }
 
 export async function generateMetadata({
@@ -36,7 +39,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const race = getRace(slug)
+  const race = await getRace(slug)
   if (!race) return { title: '대회를 찾을 수 없습니다' }
   const title = `${race.대회명} | ${formatKoreanDate(race.date)} ${shortRegionName(race.region)} 마라톤 대회`
   const description = truncate(
@@ -64,7 +67,7 @@ export async function generateMetadata({
 
 export default async function RaceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const race = getRace(slug)
+  const race = await getRace(slug)
   if (!race) notFound()
   const officialLink = race.신청링크 || race.상세링크
   const isSample = officialLink.includes('example.com')
@@ -208,7 +211,7 @@ export default async function RaceDetailPage({ params }: { params: Promise<{ slu
             </h2>
             <ul>
               <li>
-                <Check /> 접수 상태 <strong>{race.status}</strong>
+                <Check /> 대회 상태 <strong>{race.status}</strong>
               </li>
               <li>
                 <Check /> 참가 종목 <strong>{race.종목.length}개</strong>

@@ -18,15 +18,11 @@ export default function RaceCalendar({ races, onSelect }: Props) {
         <div className="status-legend">
           <span>
             <i className="open" />
-            접수중
-          </span>
-          <span>
-            <i className="soon" />
-            접수예정
+            대회예정
           </span>
           <span>
             <i className="closed" />
-            마감
+            대회종료
           </span>
         </div>
       </div>

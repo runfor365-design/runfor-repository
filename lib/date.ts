@@ -8,13 +8,6 @@ export function normalizeRaceDate(exact: string | undefined, display: string, so
   return `${year}-${match[1].padStart(2, '0')}-${match[2].padStart(2, '0')}`
 }
 
-export function normalizeStatus(status: string): RegistrationStatus {
-  if (status.includes('예정')) return '접수예정'
-  if (status.includes('마감') || status.includes('품절') || status.includes('중단'))
-    return '접수마감'
-  return '접수중'
-}
-
 export function formatKoreanDate(date: string, withYear = true) {
   return new Intl.DateTimeFormat('ko-KR', {
     ...(withYear ? { year: 'numeric' } : {}),
@@ -29,4 +22,9 @@ export function daysUntil(date: string) {
   today.setHours(0, 0, 0, 0)
   const target = new Date(`${date}T00:00:00`)
   return Math.ceil((target.getTime() - today.getTime()) / 86400000)
+}
+
+/** 대회 당일까지는 "대회예정", 다음날부터 "대회종료" */
+export function getRaceStatus(date: string): RegistrationStatus {
+  return daysUntil(date) >= 0 ? '대회예정' : '대회종료'
 }

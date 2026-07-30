@@ -8,8 +8,6 @@ interface Props {
   onSearch: (value: string) => void
   region: string
   onRegion: (value: string) => void
-  status: string
-  onStatus: (value: string) => void
   month: string
   onMonth: (value: string) => void
   months: string[]
@@ -40,15 +38,6 @@ export default function FilterBar(props: Props) {
                 {shortRegionName(r)}
               </option>
             ))}
-          </select>
-        </label>
-        <label>
-          <span>접수</span>
-          <select value={props.status} onChange={(e) => props.onStatus(e.target.value)}>
-            <option value="">전체 상태</option>
-            <option>접수중</option>
-            <option>접수예정</option>
-            <option>접수마감</option>
           </select>
         </label>
         <label>

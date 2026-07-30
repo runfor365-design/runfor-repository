@@ -1,4 +1,3 @@
-import { daysUntil } from './date'
 import type { NormalizedRace } from '@/types/race'
 
 export type RecommendReason = 'featured' | 'nearby' | 'soon'
@@ -20,7 +19,7 @@ function shuffle<T>(list: T[]) {
 
 /**
  * 추천 대회 4건을 우선순위대로 채운다.
- * 1) 추천여부(race-extra.json)가 true인 대회 1건 → 2) 방문자 지역 대회 1건 → 3) 접수중이면서 대회일이 가까운 대회로 나머지 채움
+ * 1) 추천여부(race-extra.json)가 true인 대회 1건 → 2) 방문자 지역 대회 1건 → 3) 대회예정이면서 대회일이 가까운 대회로 나머지 채움
  * 앞 순위가 모자라면 다음 순위로 자동 대체되어 항상 최대 COUNT건까지 채워진다.
  * 각 단계 후보군 안에서는 무작위로 골라, 새로고침/재방문마다 다른 조합이 보인다.
  * 선정이 끝난 뒤 최종 4건의 노출 순서도 섞어서 추천/주변/임박이 항상 같은 자리에 고정되지 않게 한다.
@@ -31,7 +30,7 @@ export function getRecommendedRaces(
 ): RecommendedRace[] {
   const picked = new Map<string, RecommendedRace>()
 
-  const featured = shuffle(races.filter((race) => race.extra?.추천여부 && daysUntil(race.date) >= 0))
+  const featured = shuffle(races.filter((race) => race.extra?.추천여부 && race.status === '대회예정'))
   for (const race of featured) {
     if (picked.size >= FEATURED_COUNT) break
     picked.set(race.slug, { race, reason: 'featured' })
@@ -39,9 +38,7 @@ export function getRecommendedRaces(
 
   if (region) {
     const nearby = shuffle(
-      races.filter(
-        (race) => race.region === region && race.status !== '접수마감' && daysUntil(race.date) >= 0,
-      ),
+      races.filter((race) => race.region === region && race.status === '대회예정'),
     )
     const nearbyTarget = picked.size + NEARBY_COUNT
     for (const race of nearby) {
@@ -51,7 +48,7 @@ export function getRecommendedRaces(
   }
 
   const soonPool = races
-    .filter((race) => race.status === '접수중' && daysUntil(race.date) >= 0)
+    .filter((race) => race.status === '대회예정')
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, SOON_WINDOW)
   const soon = shuffle(soonPool)
