@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { ArrowUpRight, RefreshCw } from 'lucide-react'
 import type { FeedItem } from '@/types/race'
 
-const VISIBLE_COUNT = 7
+const VISIBLE_COUNT = 6
 
 function sample<T>(pool: T[], count: number) {
   return [...pool].sort(() => Math.random() - 0.5).slice(0, count)

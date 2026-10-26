@@ -43,6 +43,11 @@ export default function RaceCalendar({ races, onSelect }: Props) {
           classNames: [`event-${race.status}`],
         }))}
         eventClick={(info) => {
+          // "+n 더보기" 팝오버 안에서 대회를 누른 경우, 팝오버를 닫고 대회 모달만 남긴다.
+          info.el
+            .closest('.fc-popover')
+            ?.querySelector<HTMLElement>('.fc-popover-close')
+            ?.click()
           const race = races.find((item) => item.slug === info.event.id)
           if (race) onSelect(race)
         }}

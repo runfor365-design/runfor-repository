@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { revalidateRacePages } from '@/lib/revalidate-races'
 
 const REQUIRED_FIELDS = ['slug', '대회명', '날짜'] as const
 const ALLOWED_FIELDS = [
@@ -78,5 +79,6 @@ export async function POST(request: Request) {
   const { error } = await admin.from('races').upsert(rows, { onConflict: 'slug' })
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
+  revalidateRacePages(rows.map((row) => String(row.slug)))
   return NextResponse.json({ ok: true, count: rows.length })
 }
