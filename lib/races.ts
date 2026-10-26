@@ -66,15 +66,29 @@ function normalize(row: RaceRow): NormalizedRace {
   }
 }
 
+const FETCH_PAGE_SIZE = 1000
+
 export async function getRaces(): Promise<NormalizedRace[]> {
-  const { data, error } = await supabase
-    .from('races')
-    .select(SELECT_COLUMNS)
-    .order('날짜', { ascending: true })
+  const rows: RaceRow[] = []
+  let from = 0
 
-  if (error) throw new Error(`대회 데이터를 불러오지 못했습니다: ${error.message}`)
+  // PostgREST는 한 번의 조회당 기본 최대 1000행만 반환하므로, 전체를 받을 때까지 range로 이어붙인다.
+  while (true) {
+    const { data, error } = await supabase
+      .from('races')
+      .select(SELECT_COLUMNS)
+      .order('날짜', { ascending: true })
+      .range(from, from + FETCH_PAGE_SIZE - 1)
 
-  return (data as unknown as RaceRow[]).map(normalize)
+    if (error) throw new Error(`대회 데이터를 불러오지 못했습니다: ${error.message}`)
+
+    const page = data as unknown as RaceRow[]
+    rows.push(...page)
+    if (page.length < FETCH_PAGE_SIZE) break
+    from += FETCH_PAGE_SIZE
+  }
+
+  return rows.map(normalize)
 }
 
 export async function getRace(slug: string): Promise<NormalizedRace | undefined> {
