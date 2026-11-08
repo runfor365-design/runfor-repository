@@ -15,7 +15,8 @@ import {
   Sparkles,
   TriangleAlert,
 } from 'lucide-react'
-import { formatKoreanDate } from '@/lib/date'
+import { formatKoreanDate, todayKST } from '@/lib/date'
+import RaceStatus from '@/components/RaceStatus'
 import { getRace, getRaces } from '@/lib/races'
 import { shortRegionName } from '@/lib/region-map'
 
@@ -69,6 +70,7 @@ export default async function RaceDetailPage({ params }: { params: Promise<{ slu
   const { slug } = await params
   const race = await getRace(slug)
   if (!race) notFound()
+  const serverToday = todayKST()
   const officialLink = race.신청링크 || race.상세링크
   const isSample = officialLink.includes('example.com')
   const structuredData = {
@@ -103,7 +105,7 @@ export default async function RaceDetailPage({ params }: { params: Promise<{ slu
       <header className="detail-hero">
         <div className="detail-title">
           <div>
-            <span className={`status-badge status-${race.status}`}>{race.status}</span>
+            <RaceStatus date={race.date} serverToday={serverToday} badge />
             <span className="detail-region">{shortRegionName(race.region)}</span>
           </div>
           <h1>{race.대회명}</h1>
@@ -211,7 +213,7 @@ export default async function RaceDetailPage({ params }: { params: Promise<{ slu
             </h2>
             <ul>
               <li>
-                <Check /> 대회 상태 <strong>{race.status}</strong>
+                <Check /> 대회 상태 <RaceStatus date={race.date} serverToday={serverToday} />
               </li>
               <li>
                 <Check /> 참가 종목 <strong>{race.종목.length}개</strong>

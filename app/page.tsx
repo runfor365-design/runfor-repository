@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import DashboardClient from '@/components/DashboardClient'
 import { getRaces } from '@/lib/races'
+import { todayKST } from '@/lib/date'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://runfor.kr'
 const YEAR = new Date().getFullYear()
@@ -56,7 +57,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <DashboardClient races={races} />
+      <DashboardClient races={races} today={todayKST()} />
     </>
   )
 }

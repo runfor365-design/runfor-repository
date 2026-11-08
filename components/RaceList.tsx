@@ -9,7 +9,15 @@ import type { NormalizedRace } from '@/types/race'
 
 const PAGE_SIZE = 6
 
-export default function RaceList({ races, region }: { races: NormalizedRace[]; region: string }) {
+export default function RaceList({
+  races,
+  region,
+  today,
+}: {
+  races: NormalizedRace[]
+  region: string
+  today: string
+}) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [prevRaces, setPrevRaces] = useState(races)
   if (races !== prevRaces) {
@@ -31,7 +39,7 @@ export default function RaceList({ races, region }: { races: NormalizedRace[]; r
       {races.length ? (
         <div className="race-cards">
           {visible.map((race) => {
-            const dday = daysUntil(race.date)
+            const dday = daysUntil(race.date, today)
             const tags = race.종목.slice(0, 3)
             const extra = race.종목.length - tags.length
             return (

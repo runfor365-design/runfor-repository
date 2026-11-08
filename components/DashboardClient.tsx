@@ -10,11 +10,28 @@ import RaceList from './RaceList'
 import RecommendedRaces from './RecommendedRaces'
 import NewsSection from './NewsSection'
 import VideoSection from './VideoSection'
-import { formatKoreanDate } from '@/lib/date'
+import { formatKoreanDate, getRaceStatus } from '@/lib/date'
+import { useToday } from '@/lib/use-today'
 import { regions } from '@/lib/region-map'
 import type { NormalizedRace } from '@/types/race'
 
-export default function DashboardClient({ races }: { races: NormalizedRace[] }) {
+export default function DashboardClient({
+  races: serverRaces,
+  today: serverToday,
+}: {
+  races: NormalizedRace[]
+  today: string
+}) {
+  // 서버에서 계산된 상태는 캐시 시점 기준이라, 방문한 날(한국 시간) 기준으로 다시 계산한다.
+  const today = useToday(serverToday)
+  const races = useMemo(
+    () =>
+      serverRaces.map((race) => {
+        const status = getRaceStatus(race.date, today)
+        return status === race.status ? race : { ...race, status }
+      }),
+    [serverRaces, today],
+  )
   const [search, setSearch] = useState('')
   const [region, setRegion] = useState('')
   const [month, setMonth] = useState('')
@@ -121,7 +138,7 @@ export default function DashboardClient({ races }: { races: NormalizedRace[] }) 
               <KoreaMap races={mapRaces} selectedRegion={region} onSelect={setRegion} />
             )}
           </div>
-          <RaceList races={listRaces} region={region} />
+          <RaceList races={listRaces} region={region} today={today} />
           <RecommendedRaces races={races} />
         </div>
       </section>
